@@ -1,0 +1,20 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine
+
+RUN addgroup -S icecast && \
+    adduser -S icecast
+
+RUN install_packages icecast mailcap
+
+RUN mkdir -p /var/log/icecast && \
+    touch /var/log/icecast/access.log && \
+    touch /var/log/icecast/error.log && \
+    chown -R icecast:icecast /var/log/icecast
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 8000
+USER icecast
+
+ENTRYPOINT ["/start.sh"]
+CMD ["icecast", "-c", "/etc/icecast.xml"]

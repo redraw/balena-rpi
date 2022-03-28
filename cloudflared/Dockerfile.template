@@ -1,0 +1,11 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine
+
+ENV VERSION=2022.3.4
+
+RUN install_packages wget
+
+RUN wget https://github.com/cloudflare/cloudflared/releases/download/$VERSION/cloudflared-linux-arm && \
+    mv cloudflared-linux-arm /usr/bin/cloudflared && \
+    chmod +x /usr/bin/cloudflared
+
+CMD /usr/bin/cloudflared tunnel --no-autoupdate run --token $CLOUDFLARE_TUNNEL_TOKEN
